@@ -3,15 +3,23 @@ class Pitch{
         if(validateName(name))
             this.name = name;
         this.octave = octave;
+        this.pitchClass = PitchClass.classFromPitch(name);
     }
+
     toString(){
         return this.name + this.octave;
     }
+
+    toStringIntNotation(){
+        return this.pitchClass.pitchClass;
+    }
+
     static standardInterval(pitch1, pitch2){
         let pitch1Class = PitchClass.classFromPitch(pitch1);
         let pitch2Class = PitchClass.classFromPitch(pitch2);
         return pitch2Class.pitchClass - pitch1Class.pitchClass;
     }
+
     static #validateName(name){
         //check length
         if(name.length <=3 && name.length > 0){
@@ -43,41 +51,54 @@ class PitchClass{
     static ten = new PitchClass(10);
     static eleven = new PitchClass(11);
     static pitches = [zero, one, two, three, four, five, six, seven, eight, nine, ten, eleven];
+
     constructor(number){
         this.pitchClass = number % 12;
         this.names = mapClassToName(this.number);
     }
-    static classFromPitch(pitch){
+
+    static classFromPitchName(name){
         for(let i = 0; i < pitches.length; i++){
-            if(pitches[i].names.includes(pitch.name))
+            if(pitches[i].names.includes(name))
                 return pitches[i];
         }
     }
+
+    toString(){
+        return this.names[0];
+    }
+
+    toStringIntNotation(){
+        return this.pitchClass;
+    }
+
     static #mapClassToName(number){
-        if(pitchClass == 0)
-            return ["C", "B#", "Dbb"];
-        else if(pitchClass == 1)
-            return ["C#", "Db", "Bx"];
-        else if(pitchClass == 2)
-            return ["D", "Cx", "Ebb"];
-        else if(pitchClass == 3)
-            return ["D#", "Eb", "Fbb"];
-        else if(pitchClass == 4)
-            return["E", "Fb", "Dx"];
-        else if(pitchClass == 5)
-            return ["F", "E#", "Gbb"];
-        else if(pitchClass == 6)
-            return ["F#", "Gb", "Ex"];
-        else if(pitchClass == 7)
-            return ["G", "Fx", "Abb"];
-        else if(pitchClass == 8)
-            return ["G#", "Ab"];
-        else if(pitchClass == 9)
-            return ["A", "Gx", "Bbb"];
-        else if(pitchClass == 10)
-            return ["A#", "Bb", "Cbb"];
-        else if(pitchClass == 11)
-            return ["B", "Cb", "Ax"];
+        switch(number){
+            case 0:
+                return ["C", "B#", "Dbb"];
+            case 1:
+                return ["C#", "Db", "Bx"];
+            case 2:
+                return ["D", "Cx", "Ebb"];
+            case 3:
+                return ["D#", "Eb", "Fbb"];
+            case 4:
+                return["E", "Fb", "Dx"];
+            case 5:
+                return ["F", "E#", "Gbb"];
+            case 6:
+                return ["F#", "Gb", "Ex"];
+            case 7:
+                return ["G", "Fx", "Abb"];
+            case 8:
+                return ["G#", "Ab"];
+            case 9:
+                return ["A", "Gx", "Bbb"];
+            case 10:
+                return ["A#", "Bb", "Cbb"];
+            case 11:
+                return ["B", "Cb", "Ax"];
+        }
     }
 }
 
@@ -85,7 +106,18 @@ class PitchCollection{
     constructor(pitches){
         this.pitches = pitches;
     }
+
     toString(){
         return this.pitches.join(", ");
+    }
+
+    toStringIntNotation(){
+        let string = "";
+        for(let i = 0; i < this.pitches.length; i++){
+            string += this.pitches[i].toStringIntNotation();
+            if(i != this.pitches.length - 1)
+                string += ", ";
+        }
+        return string;
     }
 }
