@@ -3,16 +3,45 @@
     <head>
         <meta charset="utf-8">
         <title>Chord Information Calculator</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <script data-main = "chords.js" src = "require.js"></script>
     </head>
     <body>
+        <style>
+
+            #piano-container {
+                width: 100%;
+            }
+    
+            .white {
+                fill: white;
+                stroke-width: 1;
+                stroke: grey
+            }
+    
+            .black {
+                fill: black;
+                stroke-width: 1;
+                stroke: black
+            }
+        </style>
+        <div id="piano-container"></div>
         <h1>Chord Information Calculator</h1>
         <br>
         <h2>Input your pitch collection using the dropdown menus.</h2>
         <br>
         <p>Number of pitches in collection: </p>
-        <form name="calculator-form" method = "POST"></form>
         <script>
-            let form = document.getElementById("calculator-form");
+            var p = require(js-svg-piano);
+
+            var elemID = 'piano-container';
+ 
+            var p = new piano(elemID, {
+            octaves: 1,
+            octaveBegin: 4
+            });
+ 
+            p.createPiano();
         </script>
     </body>
 </html>

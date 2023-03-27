@@ -1,0 +1,14 @@
+-Started working on basic classes, representing pitches and pitch classes before meeting with Prof. Novak
+-Consulted with Professor Novak about what features to have and how to improve on previous implementation of similar tools (3/21/23)
+Notes from 3/21/23 meeting:
+	User should be able to 
+	compute collection normal form, prime form, icv, and forte name of a collection
+	give the ability to transpose and invert a collection and then compute the computed information again 
+	Z mate: keep a list of the z mates because there's literally like 20 including collections up to hexachords 
+
+	-Inputs:
+	have piano keyboard
+	For checkboxes: include integer notation AND name 
+
+Implementation of similar concept: 
+https://www.mta.ca/pc-set/calculator/pc_calculate.html
