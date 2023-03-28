@@ -14,6 +14,10 @@
               float: left;
               position: relative;
               margin-right: -1px;
+              display: flex;
+              justify-content:center;
+              align-items: center;
+              color:black;
             }
             
             .black-key {
@@ -22,14 +26,16 @@
               background-color: black;
               border: 2px solid black;
               position: relative;
-              right: 15px;
               top: 0px;
               float: left;
               margin-right:-1px;
+              display: flex;
+              justify-content:center;
+              align-items: center;
             }
       
             .pressed {
-              background-color: yellow;
+              background-color: rgba(209, 20, 20, 0.562);
             }
 
             #piano-container {
@@ -41,33 +47,31 @@
     <body>
         
         <h1>Pitch class set information calculator</h1>
-        <br>
-        <p>Input your pitch collection in the textbox below using integer notation or letter names</p>
+        <p>Input your pitch collection in the textbox below using integer notation or letter names <strong>separated by spaces.</strong></p>
         <small>Note: for letter names, format your notes using b for flat, bb for double flat, # for sharp, and x for double sharp notes.</small>
+        <br><br>
         <form>
             <label for="input">Input:</label>
             <br>
-            <input type="text" id="input" name="input">
+            <input type="text" id="input" name="input" onchange="updatePiano()">
             <br>
         </form>
-        <button onclick="togglePiano()">Show Piano</button>
         <div id="piano-container">
-            <div class="white-key" note-name="C" note-int="0" ></div>
-            <div class="black-key" note-name="C#" note-int="1"></div>
-            <div class="white-key" note-name="D" note-int="2"></div>
-            <div class="black-key" note-name="D#" note-int="3"></div>
-            <div class="white-key" note-name="E" note-int="4"></div>
-            <div class="white-key" note-name="F" note-int="5"></div>
-            <div class="black-key" note-name="F#" note-int="6"></div>
-            <div class="white-key" note-name="G" note-int="7"></div>
-            <div class="black-key" note-name="G#" note-int="8"></div>
-            <div class="white-key" note-name="A" note-int="9"></div>
-            <div class="black-key" note-name="A#" note-int="10"></div>
-            <div class="white-key" note-name="B" note-int="11"></div>
+            <div class="white-key" note-name="C" note-int="0" >0</div>
+            <div class="black-key" note-name="C#" note-int="1">1</div>
+            <div class="white-key" note-name="D" note-int="2">2</div>
+            <div class="black-key" note-name="D#" note-int="3">3</div>
+            <div class="white-key" note-name="E" note-int="4">4</div>
+            <div class="white-key" note-name="F" note-int="5">5</div>
+            <div class="black-key" note-name="F#" note-int="6">6</div>
+            <div class="white-key" note-name="G" note-int="7">7</div>
+            <div class="black-key" note-name="G#" note-int="8">8</div>
+            <div class="white-key" note-name="A" note-int="9">9</div>
+            <div class="black-key" note-name="A#" note-int="10">10</div>
+            <div class="white-key" note-name="B" note-int="11">11</div>
         </div>
-        <br>
-        <br>
-        <button onclick="calculate()">Calculate</button>
+        <br><br><br><br><br>
+        <button onclick="calculate()">Calculate</div>
         <script>
             const Piano = {
               keys: null,
@@ -80,6 +84,7 @@
                   key.addEventListener('mousedown', () => {
                     key.classList.toggle('pressed', !isPressed);
                     isPressed = !isPressed;
+                    updateInput();
                   });
                 });
               },
@@ -92,18 +97,41 @@
             }
 
             Piano.initialize();
-            togglePiano();
-            function togglePiano() {
-                let style = window.getComputedStyle(document.getElementById("piano-container"));
-                if (style.display === 'none')  {
-                    Piano.show();
-                }
-                else{
-                    Piano.hide();
-                }
+            Piano.show();
+
+            const Input = document.getElementById("input");
+            
+            function updateInput(){
+              let pressedKeys = document.querySelectorAll(".pressed");
+              let pressedKeysArray = Array.from(pressedKeys);
+              let pressedKeysInts = pressedKeysArray.map(key => key.getAttribute("note-int"));
+              Input.value = pressedKeysInts.join(" ");
             }
 
-            calculate()
+            function updatePiano(){
+              let inputArray = Input.value.split(" ");
+              let inputInts = inputArray.map(key => parseInt(key));
+              Piano.keys.forEach(key => {
+                let keyInt = parseInt(key.getAttribute("note-int"));
+                if(inputInts.includes(keyInt)){
+                  key.classList.add("pressed");
+                } else {
+                  key.classList.remove("pressed");
+                }
+              });
+              Input.value = removeDuplicates(Input.value);
+            }
+
+            function removeDuplicates(str){
+              let inputArray = str.split(" ");
+              let inputInts = inputArray.map(key => parseInt(key));
+              let uniqueInts = [...new Set(inputInts)];
+              return uniqueInts.join(" ");
+            }
+
+            function calculate(){
+              console.log(Input);
+            }
           </script>
     </body>
 </html>
