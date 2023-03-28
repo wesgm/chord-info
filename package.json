@@ -9,6 +9,7 @@
   "author": "Wesley Miller <wslmllr@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "js-svg-piano": "^1.0.0"
+    "js-svg-piano": "^1.0.0",
+    "pg": "^8.10.0"
   }
 }

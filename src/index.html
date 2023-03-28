@@ -5,43 +5,105 @@
         <title>Chord Information Calculator</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
         <script data-main = "chords.js" src = "require.js"></script>
-    </head>
-    <body>
         <style>
+            .white-key {
+              width: 30px;
+              height: 100px;
+              background-color: white;
+              border: 1px solid black;
+              float: left;
+              position: relative;
+              margin-right: -1px;
+            }
+            
+            .black-key {
+              width: 20px;
+              height: 70px;
+              background-color: black;
+              border: 2px solid black;
+              position: relative;
+              right: 15px;
+              top: 0px;
+              float: left;
+              margin-right:-1px;
+            }
+      
+            .pressed {
+              background-color: yellow;
+            }
 
             #piano-container {
-                width: 100%;
+                display: none;
             }
-    
-            .white {
-                fill: white;
-                stroke-width: 1;
-                stroke: grey
-            }
-    
-            .black {
-                fill: black;
-                stroke-width: 1;
-                stroke: black
-            }
-        </style>
-        <div id="piano-container"></div>
-        <h1>Chord Information Calculator</h1>
+          </style>
+        
+    </head>
+    <body>
+        
+        <h1>Pitch class set information calculator</h1>
         <br>
-        <h2>Input your pitch collection using the dropdown menus.</h2>
+        <p>Input your pitch collection in the textbox below using integer notation or letter names</p>
+        <small>Note: for letter names, format your notes using b for flat, bb for double flat, # for sharp, and x for double sharp notes.</small>
+        <form>
+            <label for="input">Input:</label>
+            <br>
+            <input type="text" id="input" name="input">
+            <br>
+        </form>
+        <button onclick="togglePiano()">Show Piano</button>
+        <div id="piano-container">
+            <div class="white-key" note-name="C" note-int="0" ></div>
+            <div class="black-key" note-name="C#" note-int="1"></div>
+            <div class="white-key" note-name="D" note-int="2"></div>
+            <div class="black-key" note-name="D#" note-int="3"></div>
+            <div class="white-key" note-name="E" note-int="4"></div>
+            <div class="white-key" note-name="F" note-int="5"></div>
+            <div class="black-key" note-name="F#" note-int="6"></div>
+            <div class="white-key" note-name="G" note-int="7"></div>
+            <div class="black-key" note-name="G#" note-int="8"></div>
+            <div class="white-key" note-name="A" note-int="9"></div>
+            <div class="black-key" note-name="A#" note-int="10"></div>
+            <div class="white-key" note-name="B" note-int="11"></div>
+        </div>
         <br>
-        <p>Number of pitches in collection: </p>
+        <br>
+        <button onclick="calculate()">Calculate</button>
         <script>
-            var p = require(js-svg-piano);
+            const Piano = {
+              keys: null,
+              initialize: function() {
+                this.keys = document.querySelectorAll('.white-key, .black-key');
+      
+                this.keys.forEach(key => {
+                  let isPressed = false;
+              
+                  key.addEventListener('mousedown', () => {
+                    key.classList.toggle('pressed', !isPressed);
+                    isPressed = !isPressed;
+                  });
+                });
+              },
+              show: function() {
+                document.getElementById('piano-container').style.display = 'block';
+              },
+              hide: function(){
+                document.getElementById("piano-container").style.display = 'none';
+              }
+            }
 
-            var elemID = 'piano-container';
- 
-            var p = new piano(elemID, {
-            octaves: 1,
-            octaveBegin: 4
-            });
- 
-            p.createPiano();
-        </script>
+            Piano.initialize();
+            togglePiano();
+            function togglePiano() {
+                let style = window.getComputedStyle(document.getElementById("piano-container"));
+                if (style.display === 'none')  {
+                    Piano.show();
+                }
+                else{
+                    Piano.hide();
+                }
+            }
+
+            calculate()
+          </script>
     </body>
 </html>

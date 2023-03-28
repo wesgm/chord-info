@@ -120,6 +120,16 @@ class PitchCollection{
         }
         return string;
     }
+    
+    addPitch(pitch){
+        this.pitches.push(pitch);
+    }
+
+    removePitch(pitch){
+        this.pitches = this.pitches.filter(p => p != pitch);
+    }
 }
+
+
 
 
