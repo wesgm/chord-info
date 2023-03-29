@@ -7,10 +7,10 @@
         <script data-main = "chords.js" src = "require.js"></script>
         <style>
             .white-key {
-              width: 30px;
-              height: 100px;
+              width: 60px;
+              height: 200px;
               background-color: white;
-              border: 1px solid black;
+              border: 2px solid black;
               float: left;
               position: relative;
               margin-right: -1px;
@@ -23,10 +23,10 @@
             }
             
             .black-key {
-              width: 20px;
-              height: 70px;
+              width: 40px;
+              height: 140px;
               background-color: black;
-              border: 2px solid black;
+              border: 4px solid black;
               position: absolute;
               top: 0px;
               float: left;
@@ -51,42 +51,45 @@
     <body>
         
         <h1>Pitch class set information calculator</h1>
-        <p>Input your pitch collection in the textbox below using integer notation or letter names <strong>separated by spaces.</strong></p>
+        <p>Input your pitch collection in the textbox below using integer notation or capitalized letter names <strong>separated by spaces.</strong></p>
         <small>Note: for letter names, format your notes using b for flat, bb for double flat, # for sharp, and x for double sharp notes.</small>
         <br><br>
         <form>
             <label for="input">Input:</label>
             <br>
-            <input type="text" id="input" name="input" onchange="updatePiano()">
+            <input type="text" id="input" name="input" onchange="updatePiano()" size = "30">
             <br>
+            <div id="piano-container">
+              <div class="white-key" note-name="C" note-int="0">0</div>
+              <div class="black-key" note-name="C#" note-int="1" style="left: 40px">1</div>
+              <div class="white-key" note-name="D" note-int="2">2</div>
+              <div class="black-key" note-name="D#" note-int="3" style="left: 100px">3</div>
+              <div class="white-key" note-name="E" note-int="4">4</div>
+              <div class="white-key" note-name="F" note-int="5">5</div>
+              <div class="black-key" note-name="F#" note-int="6" style="left: 220px">6</div>
+              <div class="white-key" note-name="G" note-int="7">7</div>
+              <div class="black-key" note-name="G#" note-int="8"style="left: 285px">8</div>
+              <div class="white-key" note-name="A" note-int="9">9</div>
+              <div class="black-key" note-name="A#" note-int="10"style="left: 350px">10</div>
+              <div class="white-key" note-name="B" note-int="11">11</div>
+            </div>
+            <br><br><br><br><br><br><br><br><br><br>
+            <input type="submit" value="Submit">
         </form>
-        <div id="piano-container">
-            <div class="white-key" note-name="C" note-int="0">0</div>
-            <div class="black-key" note-name="C#" note-int="1" style="left: 20px">1</div>
-            <div class="white-key" note-name="D" note-int="2">2</div>
-            <div class="black-key" note-name="D#" note-int="3" style="left: 53px">3</div>
-            <div class="white-key" note-name="E" note-int="4">4</div>
-            <div class="white-key" note-name="F" note-int="5">5</div>
-            <div class="black-key" note-name="F#" note-int="6" style="left: 113px">6</div>
-            <div class="white-key" note-name="G" note-int="7">7</div>
-            <div class="black-key" note-name="G#" note-int="8"style="left: 143px">8</div>
-            <div class="white-key" note-name="A" note-int="9">9</div>
-            <div class="black-key" note-name="A#" note-int="10"style="left:174px">10</div>
-            <div class="white-key" note-name="B" note-int="11">11</div>
-        </div>
-        <br><br><br><br><br>
-        <button onclick="calculate()">Calculate</div>
         <script>
+          //int notation regex: /^\s*([0-9]?(10)?(11)?)(?:\s+([0-9]?(10)?(11)?))*\s*$/g
+          //letter notation regex: /^\s*([A-G](b)?(bb)?(#)?(x)?)(?:\s+([A-G](b)?(bb)?(#)?(x)?))*\s*$/g
+          //Final pattern: /^\s*([A-G](b)?(bb)?(#)?(x)?)(?:\s+([A-G](b)?(bb)?(#)?(x)?))*\s*$|^\s*([0-9]?(10)?(11)?)(?:\s+([0-9]?(10)?(11)?))*\s*$/g
             const Piano = {
               keys: null,
               initialize: function() {
                 this.keys = document.querySelectorAll('.white-key, .black-key');
-      
                 this.keys.forEach(key => {                  
-                  let isPressed = false;
-                  key.addEventListener('mousedown', () => {
-                    key.classList.toggle('pressed', !isPressed);
-                    isPressed = !isPressed;
+                  key.isPressed = false;
+                  key.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    key.isPressed = !key.isPressed;
+                    key.classList.toggle('pressed', key.isPressed);
                     updateInput();
                   });
                 });
@@ -104,32 +107,96 @@
 
             const Input = document.getElementById("input");
             
+            function inputIsIntNotation(input){
+              return input.match(/^\s*([0-9]?(10)?(11)?)(?:\s+([0-9]?(10)?(11)?))*\s*$/g);
+            }
+
+            function inputIsLetterNotation(input){
+              return input.match(/^\s*([A-G](b)?(bb)?(#)?(x)?)(?:\s+([A-G](b)?(bb)?(#)?(x)?))*\s*$/g);
+            }
+
             function updateInput(){
+              if(Input.value.length==0 || inputIsIntNotation(Input.value)){
+                updateInputInts();
+              } else if(inputIsLetterNotation(Input.value)){
+                updateInputLetters();
+              } else {
+                Input.value=""
+              }
+            }
+
+            function updateInputInts(){
               let pressedKeys = document.querySelectorAll(".pressed");
               let pressedKeysArray = Array.from(pressedKeys);
               let pressedKeysInts = pressedKeysArray.map(key => key.getAttribute("note-int"));
               Input.value = pressedKeysInts.join(" ");
             }
 
-            function updatePiano(){
-              let inputArray = Input.value.split(" ");
-              let inputInts = inputArray.map(key => parseInt(key));
-              Piano.keys.forEach(key => {
-                let keyInt = parseInt(key.getAttribute("note-int"));
-                if(inputInts.includes(keyInt)){
-                  key.classList.add("pressed");
-                } else {
-                  key.classList.remove("pressed");
-                }
-              });
-              Input.value = removeDuplicates(Input.value);
+            function updateInputLetters(){
+              let pressedKeys = document.querySelectorAll(".pressed");
+              let pressedKeysArray = Array.from(pressedKeys);
+              let pressedKeysLetters = pressedKeysArray.map(key => key.getAttribute("note-name"));
+              Input.value = pressedKeysLetters.join(" ");
             }
 
-            function removeDuplicates(str){
-              let inputArray = str.split(" ");
-              let inputInts = inputArray.map(key => parseInt(key));
-              let uniqueInts = [...new Set(inputInts)];
-              return uniqueInts.join(" ");
+            function updatePiano(){
+              let input = Input.value.trim();
+              if(input.length>=1){
+                if(inputIsLetterNotation(input)){
+                  updatePianoLetterNotation(input);
+                } else if(inputIsIntNotation(input)){
+                  updatePianoIntNotation(input);
+                } else {
+                  Input.value=""
+                  updatePianoFromInts([]);
+                }
+              } else {
+                updatePianoFromInts([]);
+              }
+            } 
+
+            function updatePianoIntNotation(input){
+              updatePianoFromInts(input.split(" ").map(key => parseInt(key)));
+              Input.value = removeDuplicateInts(input);
+            }
+
+            function updatePianoLetterNotation(input){
+              let classes = input.split(" ").map(key => PitchClass.classFromPitchName(key))
+              updatePianoFromInts(classes.map(key => key.getPitchClass()));
+              Input.value = removeDuplicateLetters(input);
+            }
+
+            function updatePianoFromInts(ints){
+              console.log(ints);  
+              Piano.keys.forEach(key => {
+                let keyInt = parseInt(key.getAttribute("note-int"));
+                if(ints.includes(keyInt)){
+                  key.isPressed=true;
+                } else {
+                  key.isPressed=false;
+                }
+                key.classList.toggle('pressed', key.isPressed);
+              });
+            }
+
+            function removeDuplicateInts(str){
+              let inputInts = str.split(" ").map(key => parseInt(key));
+              return  [...new Set(inputInts)].join(" ");
+            }
+
+            function removeDuplicateLetters(str){
+              return  [...new Set(str.split(" "))].join(" ");
+            }
+
+            //replaces 10 and 11 with t and e
+            function intToTe(n){
+              if(n==10){
+                return "t";
+              } else if(n==11){
+                return "e";
+              } else {
+                return n;
+              }
             }
 
             function calculate(){

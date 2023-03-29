@@ -13,8 +13,19 @@ Notes from 3/21/23 meeting:
 Implementation of similar concept: 
 https://www.mta.ca/pc-set/calculator/pc_calculate.html
 
+Did work before Mar 28:
+-Tried to get the piano to work. Couldn't figure out how to get the blocks to look right
+-Got the input to update the piano and vice versa. Sometimes have to click twice on the piano to remove a note. Should debug that
 
-Meeting with novak Mar. 28
+
+Quick meeting with Mr. Novak Mar. 28:
 -Use t and e instead of 10 and 11 so we can input without spaces, including on piano keyboard
 
+Decided against this for now. Seems to be a bit complicated, would rather get the app working first. 
 
+
+Mar. 28 log
+-Created regex for integer notation using regex101. Want to match only 0-9 or 10 or 11 separated by spaces.
+-Created regex for letter name notation: Capital letter names followed optionally by b, bb, #, and x, separated by spaces. 
+-Then we can just OR those together.
+-Got piano working perfectly!!!!

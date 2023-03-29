@@ -36,8 +36,9 @@ class Pitch{
     }
 }
 
+
 class PitchClass{
-    //pich classes
+    //pitch classes
     static zero = new PitchClass(0);
     static one = new PitchClass(1);
     static two = new PitchClass(2);
@@ -50,29 +51,14 @@ class PitchClass{
     static nine = new PitchClass(9);
     static ten = new PitchClass(10);
     static eleven = new PitchClass(11);
-    static pitches = [zero, one, two, three, four, five, six, seven, eight, nine, ten, eleven];
+    static pitches = [PitchClass.zero, PitchClass.one, PitchClass.two, PitchClass.three, PitchClass.four, PitchClass.five, PitchClass.six, PitchClass.seven, PitchClass.eight, PitchClass.nine, PitchClass.ten, PitchClass.eleven];
 
     constructor(number){
         this.pitchClass = number % 12;
-        this.names = mapClassToName(this.number);
+        this.names = PitchClass.mapClassToName(number);
     }
 
-    static classFromPitchName(name){
-        for(let i = 0; i < pitches.length; i++){
-            if(pitches[i].names.includes(name))
-                return pitches[i];
-        }
-    }
-
-    toString(){
-        return this.names[0];
-    }
-
-    toStringIntNotation(){
-        return this.pitchClass;
-    }
-
-    static #mapClassToName(number){
+    static mapClassToName(number){
         switch(number){
             case 0:
                 return ["C", "B#", "Dbb"];
@@ -100,6 +86,23 @@ class PitchClass{
                 return ["B", "Cb", "Ax"];
         }
     }
+
+    static classFromPitchName(name){
+        for(let i = 0; i < PitchClass.pitches.length; i++){
+            if(PitchClass.pitches[i].names.includes(name))
+                return PitchClass.pitches[i];
+        }
+    }
+
+    toString(){
+        return this.names[0];
+    }
+
+    getPitchClass(){
+        return this.pitchClass;
+    }
+
+    
 }
 
 class PitchCollection{
