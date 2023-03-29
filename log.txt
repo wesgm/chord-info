@@ -29,3 +29,11 @@ Mar. 28 log
 -Created regex for letter name notation: Capital letter names followed optionally by b, bb, #, and x, separated by spaces. 
 -Then we can just OR those together.
 -Got piano working perfectly!!!!
+
+Mar 29
+
+-Complement button
+-Show me number of common tones at In and Tn 
+-Do inversion matrix
+-Ask for what In/Tn gives you some number of common tones 
+-For Z mate show me the prime form of the z mate
