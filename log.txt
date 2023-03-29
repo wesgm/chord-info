@@ -12,3 +12,9 @@ Notes from 3/21/23 meeting:
 
 Implementation of similar concept: 
 https://www.mta.ca/pc-set/calculator/pc_calculate.html
+
+
+Meeting with novak Mar. 28
+-Use t and e instead of 10 and 11 so we can input without spaces, including on piano keyboard
+
+
