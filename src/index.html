@@ -57,7 +57,7 @@
         <form>
             <label for="input">Input:</label>
             <br>
-            <input type="text" id="input" name="input" onchange="updatePiano()" size = "30">
+            <input type="text" id="input" name="input" oninput="updatePiano()" size = "30">
             <br>
             <div id="piano-container">
               <div class="white-key" note-name="C" note-int="0">0</div>
@@ -115,13 +115,14 @@
               return input.match(/^\s*([A-G](b)?(bb)?(#)?(x)?)(?:\s+([A-G](b)?(bb)?(#)?(x)?))*\s*$/g);
             }
 
+            //called when user updates piano
             function updateInput(){
-              if(Input.value.length==0 || inputIsIntNotation(Input.value)){
+              //if input is not already valid letter notation we just go back to int notation when user updates piano
+              //hard to determine if it's a typo or int notation from context without a lot of complication
+              if(Input.value.length==0 || !inputIsLetterNotation(Input.value)){
                 updateInputInts();
-              } else if(inputIsLetterNotation(Input.value)){
+              } else{
                 updateInputLetters();
-              } else {
-                Input.value=""
               }
             }
 
@@ -140,63 +141,39 @@
             }
 
             function updatePiano(){
-              let input = Input.value.trim();
+              //update piano based on text input
+              let input = Input.value;
+              let doUpdate = true;
+              let parsed = [];
               if(input.length>=1){
+                parsed=input.split(" ").filter(key => key.length>0)
                 if(inputIsLetterNotation(input)){
-                  updatePianoLetterNotation(input);
+                  parsed = parsed.map(key => PitchClass.classFromPitchName(key)).map(key => parseInt(key.getPitchClass()));
                 } else if(inputIsIntNotation(input)){
-                  updatePianoIntNotation(input);
+                  parsed = parsed.map(key => parseInt(key));
                 } else {
-                  Input.value=""
-                  updatePianoFromInts([]);
+                  //dont update if input is invalid, user still typing?
+                  doUpdate=false;
+                }
+                if(doUpdate){
+                  doPianoUpdate(parsed);
                 }
               } else {
-                updatePianoFromInts([]);
+                //empty.
+                doPianoUpdate([]);
               }
             } 
 
-            function updatePianoIntNotation(input){
-              updatePianoFromInts(input.split(" ").map(key => parseInt(key)));
-              Input.value = removeDuplicateInts(input);
-            }
-
-            function updatePianoLetterNotation(input){
-              let classes = input.split(" ").map(key => PitchClass.classFromPitchName(key))
-              updatePianoFromInts(classes.map(key => key.getPitchClass()));
-              Input.value = removeDuplicateLetters(input);
-            }
-
-            function updatePianoFromInts(ints){
-              console.log(ints);  
+            function doPianoUpdate(arr){
               Piano.keys.forEach(key => {
                 let keyInt = parseInt(key.getAttribute("note-int"));
-                if(ints.includes(keyInt)){
+                if(arr.includes(keyInt)){
                   key.isPressed=true;
                 } else {
                   key.isPressed=false;
                 }
                 key.classList.toggle('pressed', key.isPressed);
               });
-            }
-
-            function removeDuplicateInts(str){
-              let inputInts = str.split(" ").map(key => parseInt(key));
-              return  [...new Set(inputInts)].join(" ");
-            }
-
-            function removeDuplicateLetters(str){
-              return  [...new Set(str.split(" "))].join(" ");
-            }
-
-            //replaces 10 and 11 with t and e
-            function intToTe(n){
-              if(n==10){
-                return "t";
-              } else if(n==11){
-                return "e";
-              } else {
-                return n;
-              }
             }
 
             function calculate(){

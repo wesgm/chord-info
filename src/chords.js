@@ -1,42 +1,3 @@
-class Pitch{
-    constructor(name, octave){
-        if(validateName(name))
-            this.name = name;
-        this.octave = octave;
-        this.pitchClass = PitchClass.classFromPitch(name);
-    }
-
-    toString(){
-        return this.name + this.octave;
-    }
-
-    toStringIntNotation(){
-        return this.pitchClass.pitchClass;
-    }
-
-    static standardInterval(pitch1, pitch2){
-        let pitch1Class = PitchClass.classFromPitch(pitch1);
-        let pitch2Class = PitchClass.classFromPitch(pitch2);
-        return pitch2Class.pitchClass - pitch1Class.pitchClass;
-    }
-
-    static #validateName(name){
-        //check length
-        if(name.length <=3 && name.length > 0){
-            //check name
-            if(name[0] == "A" || name[0] == "B" || name[0] == "C" || name[0] == "D" || name[0] == "E" || name[0] == "F" || name[0] == "G"){
-                //check accidental
-                if(name.length == 1 || (name[1] == "#" || name[1] == "b" || name[1] == "x") || (name.length == 3 && name[2] == "b")){
-                    return true;
-                }
-            }
-        }
-        else
-            return false;
-    }
-}
-
-
 class PitchClass{
     //pitch classes
     static zero = new PitchClass(0);
@@ -51,7 +12,8 @@ class PitchClass{
     static nine = new PitchClass(9);
     static ten = new PitchClass(10);
     static eleven = new PitchClass(11);
-    static pitches = [PitchClass.zero, PitchClass.one, PitchClass.two, PitchClass.three, PitchClass.four, PitchClass.five, PitchClass.six, PitchClass.seven, PitchClass.eight, PitchClass.nine, PitchClass.ten, PitchClass.eleven];
+    static pitches = [PitchClass.zero, PitchClass.one, PitchClass.two, PitchClass.three, PitchClass.four, PitchClass.five, 
+        PitchClass.six, PitchClass.seven, PitchClass.eight, PitchClass.nine, PitchClass.ten, PitchClass.eleven];
 
     constructor(number){
         this.pitchClass = number % 12;
@@ -102,7 +64,10 @@ class PitchClass{
         return this.pitchClass;
     }
 
-    
+    static standardInterval(pitch1, pitch2){
+        return pitch1.getPitchClass() - pitch2.getPitchClass();
+    }
+
 }
 
 class PitchCollection{
@@ -132,7 +97,6 @@ class PitchCollection{
         this.pitches = this.pitches.filter(p => p != pitch);
     }
 }
-
 
 
 
