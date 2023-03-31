@@ -63,9 +63,9 @@ class PitchClass{
     getPitchClass(){
         return this.pitchClass;
     }
-
+    //
     static standardInterval(pitch1, pitch2){
-        return pitch1.getPitchClass() - pitch2.getPitchClass();
+        return pitch1.pitchClass - pitch2.pitchClass;
     }
 
 }
@@ -73,20 +73,6 @@ class PitchClass{
 class PitchCollection{
     constructor(pitches){
         this.pitches = pitches;
-    }
-
-    toString(){
-        return this.pitches.join(", ");
-    }
-
-    toStringIntNotation(){
-        let string = "";
-        for(let i = 0; i < this.pitches.length; i++){
-            string += this.pitches[i].toStringIntNotation();
-            if(i != this.pitches.length - 1)
-                string += ", ";
-        }
-        return string;
     }
     
     addPitch(pitch){
@@ -98,5 +84,5 @@ class PitchCollection{
     }
 }
 
-
+PitchClass.standardInterval(PitchClass.zero, PitchClass.one);
 
