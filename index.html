@@ -47,6 +47,29 @@
       display: none;
       position: relative;
     }
+
+    table {
+      border-collapse: collapse;
+      width: 40%;
+      float: left;
+    }
+
+    td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .input-group {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    th {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
   </style>
 
 </head>
@@ -58,10 +81,9 @@
     <strong>separated by spaces.</strong></p>
   <small>Note: for letter names, format your notes using b for flat, bb for double flat, # for sharp, and x for double
     sharp notes.</small>
-  <br><br>
+  <br>
+  <h2>Input</h2>
   <form name="form" method="get">
-    <label for="input">Input:</label>
-    <br>
     <input type="text" id="input" name="input" oninput="updatePiano()" size="30" onchange="removeInvalidPitches()">
     <br>
     <div id="piano-container">
@@ -130,6 +152,86 @@
       
     });
   </script>
+  <h2>Output</h2>
+  <form name="output">
+    <button onaction="complement">Calculate from complement of input set</button>
+    <br>
+    <div class="input-group">
+      <label for="norm">Normal form:</label>
+      <input type="text" name="norm">
+    </div>
+    <div class="input-group">
+      <label for="invar">Prime form:</label>
+      <input type="text" name="prime">
+    </div>
+    <div class="input-group">
+      <label for="forte">Forte name:</label>
+      <input type="text" name="forte">
+    </div>
+    <div class="input-group">
+      <label for="zmate">Z-mate:</label>
+      <input type="text" name="zmate">
+    </div>
+    <div class="input-group">
+      <label for="zmate">Z-mate prime form:</label>
+      <input type="text" name="zmateprime">
+    </div>
+    <div class="input-group">
+      <label for="icv">Interval class vector:</label>
+      <input type="text" name="icv">
+    </div>
+    <br><br>
+    <table>
+      <thead>
+        <tr>
+          <th>n</th>
+          <th>T<sub>n</sub></th>
+        </tr>
+      </thead>
+      <tbody id="table-body-1"></tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th>n</th>
+          <th>I<sub>n</sub></th>
+        </tr>
+      </thead>
+      <tbody id="table-body-2"></tbody>
+    </table>
+    <script>
+      // Get the table body elements
+      const tableBody1 = document.getElementById("table-body-1");
+      const tableBody2 = document.getElementById("table-body-2");
+
+      // Loop through numbers 1 to 12 and generate table rows for each table
+      for (let i = 0; i < 12; i++) {
+        // Create a new table row element
+        const row1 = document.createElement("tr");
+        const row2 = document.createElement("tr");
+
+        // Create a table data cell for the number column and set its content
+        const numberCell1 = document.createElement("td");
+        numberCell1.textContent = i;
+        const numberCell2 = document.createElement("td");
+        numberCell2.textContent = i;
+
+        // Create a table data cell for the empty column
+        const emptyCell1 = document.createElement("td");
+        const emptyCell2 = document.createElement("td");
+
+        // Append the cells to the rows
+        row1.appendChild(numberCell1);
+        row1.appendChild(emptyCell1);
+        row2.appendChild(numberCell2);
+        row2.appendChild(emptyCell2);
+
+        // Append the rows to the table bodies
+        tableBody1.appendChild(row1);
+        tableBody2.appendChild(row2);
+      }
+    </script>
+  </form>
 </body>
 
 </html>
