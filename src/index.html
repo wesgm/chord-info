@@ -54,10 +54,10 @@
         <p>Input your pitch collection in the textbox below using integer notation or capitalized letter names <strong>separated by spaces.</strong></p>
         <small>Note: for letter names, format your notes using b for flat, bb for double flat, # for sharp, and x for double sharp notes.</small>
         <br><br>
-        <form>
+        <form name = "form" method="get">
             <label for="input">Input:</label>
             <br>
-            <input type="text" id="input" name="input" oninput="updatePiano()" size = "30">
+            <input type="text" id="input" name="input" oninput="updatePiano()" size = "30" onchange="removeInvalidPitches()">
             <br>
             <div id="piano-container">
               <div class="white-key" note-name="C" note-int="0">0</div>
@@ -107,12 +107,20 @@
 
             const Input = document.getElementById("input");
             
-            function inputIsIntNotation(input){
+            function inputIsValidIntNotation(input){
               return input.match(/^\s*([0-9]?(10)?(11)?)(?:\s+([0-9]?(10)?(11)?))*\s*$/g);
             }
 
-            function inputIsLetterNotation(input){
+            function inputIsValidLetterNotation(input){
               return input.match(/^\s*([A-G](b)?(bb)?(#)?(x)?)(?:\s+([A-G](b)?(bb)?(#)?(x)?))*\s*$/g);
+            }
+
+            function inputIsIntNotation(input){
+              return input.match(/^\s*[0-9]*(?:\s+([0-9]*))*\s*$/g);
+            }
+
+            function inputIsLetterNotation(input){
+              return input.match(/^\s*[a-zA-Z]*(?:\s+([a-zA-Z]*))*\s*$/g);
             }
 
             //called when user updates piano
@@ -146,10 +154,10 @@
               let doUpdate = true;
               let parsed = [];
               if(input.length>=1){
-                parsed=input.split(" ").filter(key => key.length>0)
-                if(inputIsLetterNotation(input)){
+                parsed=input.split(" ").filter(key => key.length>0);
+                if(inputIsValidLetterNotation(input)){
                   parsed = parsed.map(key => PitchClass.classFromPitchName(key)).map(key => parseInt(key.getPitchClass()));
-                } else if(inputIsIntNotation(input)){
+                } else if(inputIsValidIntNotation(input)){
                   parsed = parsed.map(key => parseInt(key));
                 } else {
                   //dont update if input is invalid, user still typing?
@@ -176,9 +184,83 @@
               });
             }
 
-            function calculate(){
-              console.log(Input);
+            function removeInvalidPitches(){
+              let input = Input.value.trim();
+              input = removeDuplicates(input);
+              let parsed = [];
+              if(input.length>=1){
+                input = removeInvalidChars(input);
+                input = removeDuplicates(input);
+                parsed=input.split(" ").filter(key => key.length>0);
+                if(inputIsLetterNotation(input)){
+                  parsed = parsed.map(key => PitchClass.classFromPitchName(key));
+                  parsed = parsed.filter(key => key!=undefined);
+                  input = parsed.join(" ");
+                }
+                else if(inputIsIntNotation(input)){
+                  parsed = parsed.map(key => parseInt(key));
+                  parsed = parsed.filter(key => key>=0 && key<=11);
+                  input = parsed.join(" ");
+                }
+                else{
+                  //default to int notation
+                  console.log("Defaulting to int notation with " + input);
+                  parsed=mapAllToIntNotation(parsed);
+                  input = parsed.join(" ");
+                }
+              }
+              Input.value = removeDuplicates(input);
+              updatePiano();
             }
+
+            function isNumeric(n) {
+              return !isNaN(parseInt(n)) && isFinite(n);
+            }
+
+            function mapAllToIntNotation(parsed){
+              for(let i=0; i<parsed.length; i++){
+                if(isNumeric(parsed[i])){
+                  parsed[i] = parseInt(parsed[i]);
+                } else {
+                  let pitchClass = PitchClass.classFromPitchName(parsed[i]);
+                  if(pitchClass!=undefined){
+                    parsed[i] = parseInt(pitchClass.getPitchClass());
+                  } else {
+                    parsed[i] = "";
+                  }
+              }
+            }
+            parsed.filter(key => key.length>0);
+            parsed = parsed.map(key => parseInt(key));
+            return parsed.filter(key => key>=0 && key<=11);
+            }
+
+            function removeInvalidChars(input){
+              let validChars = ["A", "B", "C", "D", "E", "F", "G", "b", "#", "x", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " "];
+              for(char of input){
+                if(!validChars.includes(char)){
+                  input = input.replace(char, "");
+                }
+              }
+              return input;
+            }
+
+            function removeDuplicates(input){
+              let parsed = input.split(" ").filter(key => key.length>0);
+              let unique = [...new Set(parsed)];
+              return unique.join(" ");
+            }
+
+            const Form = document.querySelector("form");
+            form.addEventListener('submit', (event) => {
+              event.preventDefault();
+              const formData = new FormData(event.target);
+              const param1Value = formData.get('param1');
+              const param2Value = formData.get('param2');
+
+              // Do something with the form data
+              console.log(param1Value, param2Value);
+            });
           </script>
     </body>
 </html>
