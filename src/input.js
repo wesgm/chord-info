@@ -20,6 +20,7 @@ class PianoInterface {
 }
 
 
+
 function inputIsValidIntNotation(input) {
   return input.match(/^\s*([0-9]?(10)?(11)?)(?:\s+([0-9]?(10)?(11)?))*\s*$/g);
 }
@@ -60,16 +61,22 @@ function doPianoUpdate(arr) {
 
 function removeInvalidPitches() {
   let input = Input.value.trim();
-  input = removeDuplicates(input);
+  input = removeInvalidChars(removeDuplicates(input));
   let parsed = [];
   if (input.length >= 1) {
-    input = removeInvalidChars(input);
-    input = removeDuplicates(input);
     parsed = input.split(" ").filter(key => key.length > 0);
     if (inputIsLetterNotation(input)) {
-      parsed = parsed.map(key => PitchClass.classFromPitchName(key));
-      parsed = parsed.filter(key => key != undefined);
-      input = parsed.join(" ");
+      let mapped = parsed.map(key => PitchClass.classFromPitchName(key));
+      mapped = mapped.filter(key => key != undefined);
+      result = [];
+      for (let i = 0; i < mapped.length; i++) {
+        for (let j = 0; j < parsed.length; j++) {
+          if (mapped[i].names.includes(parsed[j])) {
+            result.push(parsed[i]);
+          }
+        }
+      }
+      input = result.join(" ");
     }
     else if (inputIsIntNotation(input)) {
       parsed = parsed.map(key => parseInt(key));
@@ -83,8 +90,63 @@ function removeInvalidPitches() {
       input = parsed.join(" ");
     }
   }
-  Input.value = removeDuplicates(input);
+  console.log(input);
+  Input.value = input.length>=1 ? sort(removeDuplicates(input)) : "";
   updatePiano();
+}
+
+function swap(arr, xp, yp) {
+  let temp = arr[xp];
+  arr[xp] = arr[yp];
+  arr[yp] = temp;
+}
+
+function selectionSort(arr) {
+  let i, j, min_idx;
+
+  // One by one move boundary of unsorted subarray
+  for (i = 0; i < arr.length - 1; i++) {
+    // Find the minimum element in unsorted array
+    min_idx = i;
+    for (j = i + 1; j < arr.length; j++) {
+      console.log(arr[j].pitchClass);
+      if (arr[j].pitchClass < arr[min_idx].pitchClass)
+        min_idx = j;
+
+      // Swap the found minimum element with the first element
+      swap(arr, min_idx, i);
+    }
+  }
+  return arr;
+}
+
+function sort(input) {
+  if (input.length >= 1) {
+    if (inputIsValidLetterNotation(input)) {
+      let parsed = input.split(" ").filter(key => key.length > 0);
+      let mapped = parsed.map(key => PitchClass.classFromPitchName(key));
+      mapped = parsed.filter(key => key != undefined).map(key => PitchClass.classFromPitchName(key));
+      mapped = selectionSort(mapped);
+      let result = [];
+      for (let i = 0; i < mapped.length; i++) {
+        for (let j = 0; j < parsed.length; j++) {
+          if (mapped[i].names.includes(parsed[j])) {
+            result.push(parsed[j]);
+          }
+        }
+      }
+      return result.join(" ");
+    }
+    else if (inputIsValidIntNotation(input)) {
+      let parsed = input.split(" ").filter(key => key.length > 0);
+      parsed = parsed.map(key => parseInt(key));
+      parsed = parsed.sort((a, b) => a - b);
+      return parsed.join(" ");
+    }
+    else {
+      return input;
+    }
+  }
 }
 
 function isNumeric(n) {
@@ -124,3 +186,21 @@ function removeDuplicates(input) {
   let unique = [...new Set(parsed)];
   return unique.join(" ");
 }
+
+/*function findComplement(input){
+  let input = Input.value.trim();
+  if (inputIsValidIntNotation(input)) {
+    let parsed = input.split(" ").filter(key => key.length > 0);
+    parsed = parsed.map(key => parseInt(key));
+    let complement = [];
+    for (let i = 0; i < 12; i++) {
+      if (!parsed.includes(i)) {
+        complement.push(i);
+      }
+    }
+    Input.value = complement.join("");
+    updatePiano();
+    handleInput();
+  }
+}
+  */

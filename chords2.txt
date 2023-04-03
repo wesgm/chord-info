@@ -1,0 +1,453 @@
+const trichords = new Array();
+
+trichords[0] = new Array("3-1", "012");
+
+trichords[1] = new Array("3-2", "013");
+
+trichords[2] = new Array("3-3", "014");
+
+trichords[3] = new Array("3-4", "015");
+
+trichords[4] = new Array("3-5", "016");
+
+trichords[5] = new Array("3-6", "024");
+
+trichords[6] = new Array("3-7", "025");
+
+trichords[7] = new Array("3-8", "026");
+
+trichords[8] = new Array("3-9", "027");
+
+trichords[9] = new Array("3-10", "036");
+
+trichords[10] = new Array("3-11", "037");
+
+trichords[11] = new Array("3-12", "048");
+
+
+
+const tetrachords = new Array();
+
+tetrachords[0] = new Array("4-1", "0123");
+
+tetrachords[1] = new Array("4-2", "0124");
+
+tetrachords[2] = new Array("4-3", "0134");
+
+tetrachords[3] = new Array("4-4", "0125");
+
+tetrachords[4] = new Array("4-5", "0126");
+
+tetrachords[5] = new Array("4-6", "0127");
+
+tetrachords[6] = new Array("4-7", "0145");
+
+tetrachords[7] = new Array("4-8", "0156");
+
+tetrachords[8] = new Array("4-9", "0167");
+
+tetrachords[9] = new Array("4-10", "0235");
+
+tetrachords[10] = new Array("4-11", "0135");
+
+tetrachords[11] = new Array("4-12", "0236");
+
+tetrachords[12] = new Array("4-13", "0136");
+
+tetrachords[13] = new Array("4-14", "0237");
+
+tetrachords[14] = new Array("4-z15", "0146");
+
+tetrachords[15] = new Array("4-16", "0157");
+
+tetrachords[16] = new Array("4-17", "0347");
+
+tetrachords[17] = new Array("4-18", "0147");
+
+tetrachords[18] = new Array("4-19", "0148");
+
+tetrachords[19] = new Array("4-20", "0158");
+
+tetrachords[20] = new Array("4-21", "0246");
+
+tetrachords[21] = new Array("4-22", "0247");
+
+tetrachords[22] = new Array("4-23", "0257");
+
+tetrachords[23] = new Array("4-24", "0248");
+
+tetrachords[24] = new Array("4-25", "0268");
+
+tetrachords[25] = new Array("4-26", "0358");
+
+tetrachords[26] = new Array("4-27", "0258");
+
+tetrachords[27] = new Array("4-28", "0369");
+
+tetrachords[28] = new Array("4-z29", "0137");
+
+
+
+const pentachords = new Array();
+
+pentachords[0] = new Array("5-1", "01234");
+
+pentachords[1] = new Array("5-2", "01235");
+
+pentachords[2] = new Array("5-3", "01245");
+
+pentachords[3] = new Array("5-4", "01236");
+
+pentachords[4] = new Array("5-5", "01237");
+
+pentachords[5] = new Array("5-6", "01256");
+
+pentachords[6] = new Array("5-7", "01267");
+
+pentachords[7] = new Array("5-8", "02346");
+
+pentachords[8] = new Array("5-9", "01246");
+
+pentachords[9] = new Array("5-10", "01346");
+
+pentachords[10] = new Array("5-11", "02347");
+
+pentachords[11] = new Array("5-z12", "01356");
+
+pentachords[12] = new Array("5-13", "01248");
+
+pentachords[13] = new Array("5-14", "01257");
+
+pentachords[14] = new Array("5-15", "01268");
+
+pentachords[15] = new Array("5-16", "01347");
+
+pentachords[16] = new Array("5-z17", "01348");
+
+pentachords[17] = new Array("5-z18", "01457");
+
+pentachords[18] = new Array("5-19", "01367");
+
+pentachords[19] = new Array("5-20", "01568");
+
+pentachords[20] = new Array("5-21", "01458");
+
+pentachords[21] = new Array("5-22", "01478");
+
+pentachords[22] = new Array("5-23", "02357");
+
+pentachords[23] = new Array("5-24", "01357");
+
+pentachords[24] = new Array("5-25", "02358");
+
+pentachords[25] = new Array("5-26", "02458");
+
+pentachords[26] = new Array("5-27", "01358");
+
+pentachords[27] = new Array("5-28", "02368");
+
+pentachords[28] = new Array("5-29", "01368");
+
+pentachords[29] = new Array("5-30", "01468");
+
+pentachords[30] = new Array("5-31", "01369");
+
+pentachords[31] = new Array("5-32", "01469");
+
+pentachords[32] = new Array("5-33", "02468");
+
+pentachords[33] = new Array("5-34", "02469");
+
+pentachords[34] = new Array("5-35", "02479");
+
+pentachords[35] = new Array("5-z36", "01247");
+
+pentachords[36] = new Array("5-z37", "03458");
+
+pentachords[37] = new Array("5-z38", "01258");
+
+
+
+const hexachords = new Array();
+
+hexachords[0] = new Array("6-1", "012345");
+
+hexachords[1] = new Array("6-2", "012346");
+
+hexachords[2] = new Array("6-z3", "012356");
+
+hexachords[3] = new Array("6-z4", "012456");
+
+hexachords[4] = new Array("6-5", "012367");
+
+hexachords[5] = new Array("6-z6", "012567");
+
+hexachords[6] = new Array("6-7", "012678");
+
+hexachords[7] = new Array("6-8", "023457");
+
+hexachords[8] = new Array("6-9", "012357");
+
+hexachords[9] = new Array("6-z10", "013457");
+
+hexachords[10] = new Array("6-z11", "012457");
+
+hexachords[11] = new Array("6-z12", "012467");
+
+hexachords[12] = new Array("6-z13", "013467");
+
+hexachords[13] = new Array("6-14", "013458");
+
+hexachords[14] = new Array("6-15", "012458");
+
+hexachords[15] = new Array("6-16", "014568");
+
+hexachords[16] = new Array("6-z17", "012478");
+
+hexachords[17] = new Array("6-18", "012578");
+
+hexachords[18] = new Array("6-z19", "013478");
+
+hexachords[19] = new Array("6-20", "014589");
+
+hexachords[20] = new Array("6-21", "023468");
+
+hexachords[21] = new Array("6-22", "012468");
+
+hexachords[22] = new Array("6-z23", "023568");
+
+hexachords[23] = new Array("6-z24", "013468");
+
+hexachords[24] = new Array("6-z25", "013568");
+
+hexachords[25] = new Array("6-z26", "013578");
+
+hexachords[26] = new Array("6-27", "013469");
+
+hexachords[27] = new Array("6-z28", "013569");
+
+hexachords[28] = new Array("6-z29", "023679");
+
+hexachords[29] = new Array("6-30", "013679");
+
+hexachords[30] = new Array("6-31", "014579");
+
+hexachords[31] = new Array("6-32", "024579");
+
+hexachords[32] = new Array("6-33", "023579");
+
+hexachords[33] = new Array("6-34", "013579");
+
+hexachords[34] = new Array("6-35", "0246810");
+
+hexachords[35] = new Array("6-z36", "012347");
+
+hexachords[36] = new Array("6-z37", "012348");
+
+hexachords[37] = new Array("6-z38", "012378");
+
+hexachords[38] = new Array("6-z39", "023458");
+
+hexachords[39] = new Array("6-z40", "012358");
+
+hexachords[40] = new Array("6-z41", "012368");
+
+hexachords[41] = new Array("6-z42", "012369");
+
+hexachords[42] = new Array("6-z43", "012568");
+
+hexachords[43] = new Array("6-z44", "012569");
+
+hexachords[44] = new Array("6-z45", "023469");
+
+hexachords[45] = new Array("6-z46", "012469");
+
+hexachords[46] = new Array("6-z47", "012479");
+
+hexachords[47] = new Array("6-z48", "012579");
+
+hexachords[48] = new Array("6-z49", "013479");
+
+hexachords[49] = new Array("6-z50", "014679");
+
+
+
+const septachords = new Array();
+
+septachords[0] = new Array("7-1", "0123456");
+
+septachords[1] = new Array("7-2", "0123457");
+
+septachords[2] = new Array("7-3", "0123458");
+
+septachords[3] = new Array("7-4", "0123467");
+
+septachords[4] = new Array("7-5", "0123567");
+
+septachords[5] = new Array("7-6", "0123478");
+
+septachords[6] = new Array("7-7", "0123678");
+
+septachords[7] = new Array("7-8", "0234568");
+
+septachords[8] = new Array("7-9", "0123468");
+
+septachords[9] = new Array("7-10", "0123469");
+
+septachords[10] = new Array("7-11", "0134568");
+
+septachords[11] = new Array("7-z12", "0123479");
+
+septachords[12] = new Array("7-13", "0124568");
+
+septachords[13] = new Array("7-14", "0123578");
+
+septachords[14] = new Array("7-15", "0124678");
+
+septachords[15] = new Array("7-16", "0123569");
+
+septachords[16] = new Array("7-z17", "0124569");
+
+septachords[17] = new Array("7-z18", "0145679");
+
+// septachords[17] was packed to the left whereas most
+
+// sets listed were packed from the right, so I changed it.
+
+septachords[18] = new Array("7-19", "0123679");
+
+septachords[19] = new Array("7-20", "0125679");
+
+// septachords[19] was packed to the left whereas most
+
+// sets listed were packed from the right, so I changed it.
+
+septachords[20] = new Array("7-21", "0124589");
+
+septachords[21] = new Array("7-22", "0125689");
+
+septachords[22] = new Array("7-23", "0234579");
+
+septachords[23] = new Array("7-24", "0123579");
+
+septachords[24] = new Array("7-25", "0234679");
+
+septachords[25] = new Array("7-26", "0134579");
+
+septachords[26] = new Array("7-27", "0124579");
+
+septachords[27] = new Array("7-28", "0135679");
+
+septachords[28] = new Array("7-29", "0124679");
+
+septachords[29] = new Array("7-30", "0124689");
+
+septachords[30] = new Array("7-31", "0134679");
+
+septachords[31] = new Array("7-32", "0134689");
+
+septachords[32] = new Array("7-33", "01246810");
+
+septachords[33] = new Array("7-34", "01346810");
+
+septachords[34] = new Array("7-35", "01356810");
+
+septachords[35] = new Array("7-z36", "0123568");
+
+septachords[36] = new Array("7-z37", "0134578");
+
+septachords[37] = new Array("7-z38", "0124578");
+
+
+
+const octachords = new Array();
+
+octachords[0] = new Array("8-1", "01234567");
+
+octachords[1] = new Array("8-2", "01234568");
+
+octachords[2] = new Array("8-3", "01234569");
+
+octachords[3] = new Array("8-4", "01234578");
+
+octachords[4] = new Array("8-5", "01234678");
+
+octachords[5] = new Array("8-6", "01235678");
+
+octachords[6] = new Array("8-7", "01234589");
+
+octachords[7] = new Array("8-8", "01234789");
+
+octachords[8] = new Array("8-9", "01236789");
+
+octachords[9] = new Array("8-10", "02345679");
+
+octachords[10] = new Array("8-11", "01234579");
+
+octachords[11] = new Array("8-12", "01345679");
+
+octachords[12] = new Array("8-13", "01234679");
+
+octachords[13] = new Array("8-14", "01245679");
+
+octachords[14] = new Array("8-z15", "01234689");
+
+octachords[15] = new Array("8-16", "01235789");
+
+octachords[16] = new Array("8-17", "01345689");
+
+octachords[17] = new Array("8-18", "01235689");
+
+octachords[18] = new Array("8-19", "01245689");
+
+octachords[19] = new Array("8-20", "01245789");
+
+octachords[20] = new Array("8-21", "012346810");
+
+octachords[21] = new Array("8-22", "012356810");
+
+octachords[22] = new Array("8-23", "012357810");
+
+octachords[23] = new Array("8-24", "012456810");
+
+octachords[24] = new Array("8-25", "012467810");
+
+octachords[25] = new Array("8-26", "013457810");
+
+// octachords[25] was packed to the left whereas most
+
+// sets listed were packed from the right, so I changed it.
+
+octachords[26] = new Array("8-27", "012457810");
+
+octachords[27] = new Array("8-28", "013467910");
+
+octachords[28] = new Array("8-z29", "01235679");
+
+
+
+const nonachords = new Array();
+
+nonachords[0] = new Array("9-1", "012345678");
+
+nonachords[1] = new Array("9-2", "012345679");
+
+nonachords[2] = new Array("9-3", "012345689");
+
+nonachords[3] = new Array("9-4", "012345789");
+
+nonachords[4] = new Array("9-5", "012346789");
+
+nonachords[5] = new Array("9-6", "0123456810");
+
+nonachords[6] = new Array("9-7", "0123457810");
+
+nonachords[7] = new Array("9-8", "0123467810");
+
+nonachords[8] = new Array("9-9", "0123567810");
+
+nonachords[9] = new Array("9-10", "0123467910");
+
+nonachords[10] = new Array("9-11", "0123567910");
+
+nonachords[11] = new Array("9-12", "0124568910");
