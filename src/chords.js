@@ -1,3 +1,17 @@
+const dyads = new Array();
+
+dyads[0] = new Array("2-1", "0,1");
+
+dyads[1] = new Array("2-2", "0,2");
+
+dyads[2] = new Array("2-3", "0,3");
+
+dyads[3] = new Array("2-4", "0,4");
+
+dyads[4] = new Array("2-5", "0,5");
+
+dyads[5] = new Array("2-6", "0,6");
+
 const trichords = new Array();
 
 trichords[0] = new Array("3-1", "0,1,2");
@@ -452,7 +466,24 @@ nonachords[10] = new Array("9-11", "0,1,2,3,5,6,7,9,10");
 
 nonachords[11] = new Array("9-12", "0,1,2,4,5,6,8,9,10");
 
+const decachords = new Array();
+
+decachords[0] = new Array("10-1", "0,1,2,3,4,5,6,7,8,9");
+
+decachords[1] = new Array("10-2", "0,1,2,3,4,5,6,7,8,10");
+
+decachords[2] = new Array("10-3", "0,1,2,3,4,5,6,7,9,10");
+
+decachords[3] = new Array("10-4", "0,1,2,3,4,5,6,8,9,10");
+
+decachords[4] = new Array("10-5", "0,1,2,3,4,5,7,8,9,10");
+
+decachords[5] = new Array("10-6", "0,1,2,3,4,6,7,8,9,10");
+
+
+
 const chords = [];
+chords[2] = dyads;
 chords[3] = trichords;
 chords[4] = tetrachords;
 chords[5] = pentachords;
@@ -460,11 +491,12 @@ chords[6] = hexachords;
 chords[7] = septachords;
 chords[8] = octachords;
 chords[9] = nonachords;
-
+chords[10] = decachords;
 
 function forteName(primeForm) {
+    console.log(primeForm);
     let cardinality = primeForm.size();
-    if (cardinality > 2) {
+    if (cardinality >= 2) {
         let chord = chords[cardinality];
         for (let i = 0; i < chord.length; i++) {
             if (chord[i][1] === primeForm.toStringCommasSansSpaces()) {
@@ -485,7 +517,7 @@ function findZMate(forte, primeForm) {
     let zs = chord.filter(key => key[0] != forte && key[0].includes("z"));
     console.log(zs);
     for (z of zs) {
-        let icv2 = new PitchCollection(z[1].split(",").map(key => PitchClass.class(key))).intervalClassVector();
+        let icv2 = new PitchCollection(z[1].split(",").map(key => PitchClass.class(key))).icv();
         console.log(icv2);
         if (icv.toString() == icv2.toString()) {
             console.log(z);
@@ -499,14 +531,6 @@ function mod(n, m) {
     return ((n % m) + m) % m;
 }
 
-intervalClass = function (interval) {
-    if (interval <= 6) {
-        return interval;
-    }
-    else {
-        return 12 - interval;
-    }
-}
 
 class PitchClass {
     //pitch classes
@@ -596,6 +620,9 @@ class PitchClass {
 class PitchCollection {
     constructor(collection) {
         this.collection = Array.from(collection);
+        this.normalForm;
+        this.primeForm;
+        this.intervalClassVector;
     }
 
     toStringSpaces() {
@@ -629,7 +656,7 @@ class PitchCollection {
 
     invertProperly(n) {
         let inverted = this.invertAroundZero();
-        return new PitchCollection(inverted.transpose(n).collection.sort((a, b) => b.interval(a))).normalForm();
+        return new PitchCollection(inverted.transpose(n).collection.sort((a, b) => b.interval(a))).normal();
     }
 
     invertAroundZero() {
@@ -666,7 +693,7 @@ class PitchCollection {
         return bottom.concat(top);
     }
 
-    normalForm() {
+    normal() {
         let inversions = [];
         for (let i = 0; i < this.collection.length; i++) {
             inversions.push(new PitchCollection(this.invert(i)));
@@ -682,54 +709,73 @@ class PitchCollection {
                 smallestRange.push(inversions[i]);
             }
         }
-
         //now choose the tightest packing to bottom 
         let tightest = smallestRange[0];
         for (let i = 1; i < smallestRange.length; i++) {
-            let packing = tightest.get(0).intervalMod12(tightest.get(1));
-            let newPacking = smallestRange[i].get(0).intervalMod12(smallestRange[i].get(1));
-            if (packing > newPacking) {
-                tightest = smallestRange[i];
+            for(let j = smallestRange[i].size() - 1 ; j>0; j--){
+                if(tightest.get(0).intervalMod12(tightest.get(j))  > smallestRange[i].get(0).intervalMod12(smallestRange[i].get(j))){
+                    tightest = smallestRange[i];
+                    break;
+                }
             }
         }
-
         //should automatically put the lowest root first
+        this.normalForm = tightest;
         return tightest;
     }
 
-    primeForm() {
-        let normalForm = this.normalForm();
-        let root = normalForm.get(0).pitchClass;
-        let transposed = normalForm.transpose(-root);
-        let inverted = transposed.invertProperly(0);
+    prime() {
+        if(!this.normalForm) {
+            this.normal();
+        }
+        let root = this.normalForm.get(0).pitchClass;
+        let transposed = this.normalForm.transpose(-root);
+        let inverted = transposed.invertProperly(0).normal();
         let rootPrime = inverted.get(0).pitchClass;
         inverted = inverted.transpose(-rootPrime);
+        console.log(transposed);
+        console.log(inverted);
         for (let i = transposed.size() - 1; i >= 0; i--) {
             let gapT = PitchClass.zero.interval(transposed.get(i));
             let gapI = PitchClass.zero.interval(inverted.get(i));
             if (gapT < gapI) {
+                this.primeForm = transposed;
                 return transposed;
             }
             else if (gapI < gapT) {
+                this.primeForm = inverted;
                 return inverted;
             }
             //else continue
         }
+        this.primeForm = transposed;
         return transposed; //identical under inversion
     }
 
-    intervalClassVector() {
-        let normal = this.normalForm();
-        let intervalClassVector = [0, 0, 0, 0, 0, 0,];
-        for (let i = 0; i < normal.collection.length; i++) {
-            for (let j = 0; j < normal.collection.length; j++) {
+    icv() {
+        if (!this.normalForm) {
+            this.normal();
+        }
+        let intervalClassVector = [0, 0, 0, 0, 0, 0];
+        for (let i = 0; i < this.normalForm.collection.length; i++) {
+            for (let j = 0; j < this.normalForm.collection.length; j++) {
                 if (i != j) {
-                    let interval = intervalClass(normal.get(i).interval(normal.get(j)));
+                    let interval = intervalClass(this.normalForm.get(i).interval(this.normalForm.get(j)));
                     intervalClassVector[interval - 1] += 1;
                 }
             }
         }
+        this.intervalClassVector = intervalClassVector;
         return intervalClassVector;
+    }
+}
+
+intervalClass = function (interval) {
+    if (interval <= 6) {
+        return interval;
+    }
+    else {
+        return 12 - interval;
     }
 }
 
@@ -786,17 +832,16 @@ function handleInput() {
     }
     initializeTables();
     //initializeMatrix(set.size());
-    let normalForm = set.normalForm();
-    document.getElementById("norm").value = "[" + normalForm.toStringCommas() + "]";
-    let primeForm = set.primeForm();
-    document.getElementById("prime").value = "(" + primeForm.toString() + ")";
-    let intervalClassVector = set.intervalClassVector();
-    document.getElementById("icv").value = "[" + intervalClassVector.toString() + "]";
-    let forte = forteName(primeForm);
+    document.getElementById("norm").value = "[" + set.normal().toStringCommas() + "]";
+    document.getElementById("prime").value = "(" + set.prime().toString() + ")";
+    document.getElementById("icv").value = "[" + set.icv().join("") + "]";
+    console.log(set.primeForm)
+    console.log(set.normalForm);
+    console.log(set.intervalClassVector)
+    let forte = forteName(set.primeForm);
     document.getElementById("forte").value = forte;
     if (forte.includes("z")) {
-        let zmate = findZMate(forte, primeForm);
-        console.log(zmate);
+        let zmate = findZMate(forte, set.primeForm);
         let zp = "(" + zmate[1].split(",").join("") + ")";
         document.getElementById("zmate").value = zmate[0];
         document.getElementById("zmateprime").value = zp;
@@ -810,8 +855,8 @@ function handleInput() {
     for (let i = 0; i < 12; i++) {
         const row1 = transpositions.getElementsByTagName("tr")[i];
         const row2 = inversions.getElementsByTagName("tr")[i];
-        row1.getElementsByTagName("td")[1].textContent = "[" + normalForm.transpose(i).toStringCommas() + "]"; 
-        row2.getElementsByTagName("td")[1].textContent = "[" + normalForm.invertProperly(i).toStringCommas() + "]";
+        row1.getElementsByTagName("td")[1].textContent = "[" + set.normalForm.transpose(i).toStringCommas() + "]"; 
+        row2.getElementsByTagName("td")[1].textContent = "[" + set.normalForm.invertProperly(i).toStringCommas() + "]";
     }
     //updateMatrix(set);
 }
