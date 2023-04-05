@@ -501,6 +501,15 @@ function forteName(primeForm) {
         for (let i = 0; i < chord.length; i++) {
             if (chord[i][1] === primeForm.toStringCommasSansSpaces()) {
                 return chord[i][0];
+            }else{
+                if(primeForm.toStringCommasSansSpaces() == "0,1,3,5,8,9"){
+                    return "6-31"; //This is a special case because the prime form is not in the list of prime forms. List must be wrong
+                }
+                if(primeForm.toStringCommasSansSpaces() == "0,1,3,7,8"){
+                    return "5-20";
+                }
+                //These prime forms are poorly behaved because they have different names when packed from the left or right
+                //Clarify with Novak and get a better list before going public
             }
         }
     }
@@ -511,7 +520,7 @@ function forteName(primeForm) {
 
 function findZMate(forte, primeForm) {
     let cardinality = primeForm.size();
-    let icv = primeForm.intervalClassVector();
+    let icv = primeForm.icv();
     let chord = chords[cardinality];
     console.log(chord);
     let zs = chord.filter(key => key[0] != forte && key[0].includes("z"));
@@ -780,7 +789,6 @@ intervalClass = function (interval) {
 }
 
 function constructPitchClassSet(userInput) {
-    console.log(userInput)
     let parsed = userInput.split(" ").filter(key => key.length > 0);
     parsed = parsed.map(key => parseInt(key));
     let pitchClasses = [];
